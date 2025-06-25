@@ -1,0 +1,40 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Node
+node_modules/
+
+# Next.js build output
+.next/
+/out/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env and secrets
+.env*
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Test/coverage
+coverage/
+
+# Misc
+*.local
+*.sublime-workspace
+
+# Supabase generated
+supabase/.temp/
+supabase/migrations/.temp/
+
+# Images and uploads (if you add uploads later, update this as needed)
+public/placeholder.png
