@@ -1,4 +1,3 @@
-import { useAccount, useChainId } from 'wagmi';
 import { ESCROW_MARKETPLACE_ABI, ESCROW_MARKETPLACE_ADDRESS } from './escrowConfig';
 import { ethers } from 'ethers';
 import { Listing } from './listingsApi';
