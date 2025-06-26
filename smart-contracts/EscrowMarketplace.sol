@@ -25,9 +25,17 @@ contract EscrowMarketplace {
     mapping(uint256 => Purchase) public purchases;
     uint256 public purchaseCount;
 
+    address public feeRecipient;
+    uint256 public feePercent = 2; // 2% fee
+
     event Purchased(uint256 indexed purchaseId, address indexed buyer, address indexed seller, uint256 amount, address tokenAddress);
     event Confirmed(uint256 indexed purchaseId);
     event Refunded(uint256 indexed purchaseId);
+
+    constructor(address _feeRecipient) {
+        require(_feeRecipient != address(0), "Invalid fee recipient");
+        feeRecipient = _feeRecipient;
+    }
 
     function purchase(address seller, uint256 amount, address tokenAddress) external payable returns (uint256) {
         if (tokenAddress == address(0)) {
@@ -55,10 +63,14 @@ contract EscrowMarketplace {
         require(!p.isConfirmed, "Already confirmed");
         require(!p.isRefunded, "Already refunded");
         p.isConfirmed = true;
+        uint256 fee = (p.amount * feePercent) / 100;
+        uint256 sellerAmount = p.amount - fee;
         if (p.tokenAddress == address(0)) {
-            payable(p.seller).transfer(p.amount);
+            payable(feeRecipient).transfer(fee);
+            payable(p.seller).transfer(sellerAmount);
         } else {
-            IERC20(p.tokenAddress).transfer(p.seller, p.amount);
+            IERC20(p.tokenAddress).transfer(feeRecipient, fee);
+            IERC20(p.tokenAddress).transfer(p.seller, sellerAmount);
         }
         emit Confirmed(purchaseId);
     }

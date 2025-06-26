@@ -7,6 +7,7 @@ export type Listing = {
   description: string;
   price_usdc: number;
   image_url: string;
+  payment_token: string; // <-- Added for token address (USDC or ETH zero address)
   is_sold: boolean;
   created_at: string;
 };

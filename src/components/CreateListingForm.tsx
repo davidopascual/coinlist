@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { createListing } from '@/utils/listingsApi';
 import { useAccount } from 'wagmi';
 
+// USDC token address for Base Sepolia (update if needed)
+const USDC_ADDRESS = '0xD9C64bB8cA1e2e2e6bB6e7e6e7e6e7e6e7e6e7e6';
+
 export function CreateListingForm({ onCreated }: { onCreated?: () => void }) {
   const { address } = useAccount();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [paymentType, setPaymentType] = useState<'USDC' | 'ETH'>('USDC');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -32,19 +36,17 @@ export function CreateListingForm({ onCreated }: { onCreated?: () => void }) {
         description,
         price_usdc: parseFloat(price),
         image_url: imageUrl,
+        payment_token: paymentType === 'USDC' ? USDC_ADDRESS : '0x0000000000000000000000000000000000000000',
       });
       setSuccess(true);
       setTitle('');
       setDescription('');
       setPrice('');
       setImageUrl('');
+      setPaymentType('USDC');
       onCreated?.();
     } catch (e) {
-      if (e instanceof Error) {
-        setError(e.message);
-      } else {
-        setError('An unknown error occurred.');
-      }
+      setError(e instanceof Error ? e.message : 'Unknown error');
     } finally {
       setLoading(false);
     }
@@ -71,7 +73,7 @@ export function CreateListingForm({ onCreated }: { onCreated?: () => void }) {
       />
       <input
         className="border rounded px-3 py-2"
-        placeholder="Price (USDC)"
+        placeholder="Price (USDC or ETH)"
         type="number"
         min="0"
         step="0.01"
@@ -86,6 +88,18 @@ export function CreateListingForm({ onCreated }: { onCreated?: () => void }) {
         onChange={e => setImageUrl(e.target.value)}
         disabled={loading}
       />
+      <div className="flex gap-4 items-center">
+        <label className="text-sm">Payment:</label>
+        <select
+          className="border rounded px-2 py-1"
+          value={paymentType}
+          onChange={e => setPaymentType(e.target.value as 'USDC' | 'ETH')}
+          disabled={loading}
+        >
+          <option value="USDC">USDC (recommended)</option>
+          <option value="ETH">ETH (optional)</option>
+        </select>
+      </div>
       <button
         type="submit"
         className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition disabled:opacity-50"
