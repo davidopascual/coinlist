@@ -10,6 +10,7 @@ export type Listing = {
   payment_token: string; // <-- Added for token address (USDC or ETH zero address)
   is_sold: boolean;
   created_at: string;
+  purchase_id?: string; // <-- Add purchase_id for contract purchaseId
 };
 
 export async function fetchListings(): Promise<Listing[]> {
@@ -23,7 +24,7 @@ export async function fetchListings(): Promise<Listing[]> {
   return data || [];
 }
 
-export async function createListing(listing: Omit<Listing, 'id' | 'is_sold' | 'created_at'>): Promise<Listing> {
+export async function createListing(listing: Omit<Listing, 'id' | 'is_sold' | 'created_at' | 'purchase_id'>): Promise<Listing> {
   const supabase = getSupabaseClient();
   const { data, error } = await supabase
     .from('listings')

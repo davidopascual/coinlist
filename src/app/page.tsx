@@ -4,6 +4,7 @@ import { ListingsGrid } from "@/components/ListingsGrid";
 import { CreateListingForm } from "@/components/CreateListingForm";
 import { WalletStatus } from "@/components/WalletStatus";
 import { USDCBalance } from "@/components/USDCBalance";
+import { ETHBalance } from "@/components/ETHBalance";
 import { useState } from "react";
 
 export default function Home() {
@@ -16,6 +17,7 @@ export default function Home() {
           <ConnectButton />
           <WalletStatus />
           <USDCBalance />
+          <ETHBalance />
         </div>
       </header>
       <main className="flex-1 flex flex-col items-center px-4 py-12">

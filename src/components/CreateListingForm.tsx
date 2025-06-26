@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { createListing } from '@/utils/listingsApi';
 import { useAccount } from 'wagmi';
+import { ethers } from 'ethers';
 
-// USDC token address for Base Sepolia (update if needed)
-const USDC_ADDRESS = '0xD9C64bB8cA1e2e2e6bB6e7e6e7e6e7e6e7e6e7e6';
+// USDC token address for Base Sepolia (checksummed)
+const USDC_ADDRESS = '0x6fBf2cb78C2Aa07c679c4A9af84E03EbfB69161e';
+const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export function CreateListingForm({ onCreated }: { onCreated?: () => void }) {
   const { address } = useAccount();
@@ -15,6 +17,14 @@ export function CreateListingForm({ onCreated }: { onCreated?: () => void }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  function isValidAddress(addr: string) {
+    try {
+      return ethers.getAddress(addr) === addr;
+    } catch {
+      return false;
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,15 +38,24 @@ export function CreateListingForm({ onCreated }: { onCreated?: () => void }) {
       setError('All fields are required.');
       return;
     }
+    if (isNaN(Number(price)) || Number(price) <= 0) {
+      setError('Price must be a positive number.');
+      return;
+    }
+    // Validate seller address
+    if (!isValidAddress(address)) {
+      setError('Invalid seller wallet address.');
+      return;
+    }
     setLoading(true);
     try {
       await createListing({
-        seller_wallet: address,
+        seller_wallet: ethers.getAddress(address), // checksummed
         title,
         description,
         price_usdc: parseFloat(price),
         image_url: imageUrl,
-        payment_token: paymentType === 'USDC' ? USDC_ADDRESS : '0x0000000000000000000000000000000000000000',
+        payment_token: paymentType === 'USDC' ? USDC_ADDRESS : ETH_ADDRESS,
       });
       setSuccess(true);
       setTitle('');
@@ -89,20 +108,20 @@ export function CreateListingForm({ onCreated }: { onCreated?: () => void }) {
         disabled={loading}
       />
       <div className="flex gap-4 items-center">
-        <label className="text-sm">Payment:</label>
+        <label className="font-semibold">Payment:</label>
         <select
-          className="border rounded px-2 py-1"
+          className="border rounded px-3 py-2"
           value={paymentType}
           onChange={e => setPaymentType(e.target.value as 'USDC' | 'ETH')}
           disabled={loading}
         >
-          <option value="USDC">USDC (recommended)</option>
-          <option value="ETH">ETH (optional)</option>
+          <option value="USDC">USDC</option>
+          <option value="ETH">ETH</option>
         </select>
       </div>
       <button
+        className="bg-blue-600 text-white px-4 py-2 rounded font-semibold disabled:opacity-60"
         type="submit"
-        className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition disabled:opacity-50"
         disabled={loading}
       >
         {loading ? 'Creating...' : 'Create Listing'}

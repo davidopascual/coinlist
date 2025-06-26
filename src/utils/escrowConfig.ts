@@ -216,4 +216,4 @@ export const ESCROW_MARKETPLACE_ABI = [
 ];
 
 // Replace with your deployed contract address on Base Sepolia
-export const ESCROW_MARKETPLACE_ADDRESS = "0xd9145CCE52D386f254917e481eB44e9943F39138";
+export const ESCROW_MARKETPLACE_ADDRESS = "0xbAB24A08b58E16200D4C1cB48De3E253AD85E5aA";
