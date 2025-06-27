@@ -32,6 +32,14 @@ contract EscrowMarketplace {
         feeRecipient = _feeRecipient;
     }
 
+    // Prevent accidental ETH transfers
+    receive() external payable {
+        revert("Send ETH via purchase()");
+    }
+    fallback() external payable {
+        revert("Send ETH via purchase()");
+    }
+
     function purchase(address seller, uint256 amount, address tokenAddress) external payable returns (uint256) {
         if (tokenAddress == address(0)) {
             require(msg.value == amount, "ETH sent must match amount");

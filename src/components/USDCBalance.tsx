@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { formatUnits } from 'viem';
 
 // USDC contract address for Base Sepolia (update if needed)
-const USDC_ADDRESS = '0xD9C64bB8cA1e2e2e6bB6e7e6e7e6e7e6e7e6e7e6';
+const USDC_ADDRESS = process.env.NEXT_PUBLIC_USDC_ADDRESS!;
 const USDC_DECIMALS = 6;
 
 const ERC20_ABI = [

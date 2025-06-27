@@ -2,7 +2,7 @@ import { ESCROW_MARKETPLACE_ABI, ESCROW_MARKETPLACE_ADDRESS } from './escrowConf
 import { ethers } from 'ethers';
 
 // USDC token address for Base Sepolia (checksummed)
-export const USDC_ADDRESS = '0x6fBf2cb78C2Aa07c679c4A9af84E03EbfB69161e';
+export const USDC_ADDRESS = process.env.NEXT_PUBLIC_USDC_ADDRESS!;
 export const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 // Minimal ERC20 ABI for approve/allowance

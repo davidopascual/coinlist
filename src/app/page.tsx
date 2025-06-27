@@ -5,10 +5,14 @@ import { CreateListingForm } from "@/components/CreateListingForm";
 import { WalletStatus } from "@/components/WalletStatus";
 import { USDCBalance } from "@/components/USDCBalance";
 import { ETHBalance } from "@/components/ETHBalance";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const [refresh, setRefresh] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
   return (
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col">
       <header className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-800">
@@ -36,7 +40,7 @@ export default function Home() {
         <ListingsGrid key={refresh} />
       </main>
       <footer className="text-center text-xs text-gray-400 py-4 border-t border-gray-200 dark:border-gray-800">
-        &copy; {new Date().getFullYear()} Coinlist. All rights reserved.
+        &copy; {mounted ? new Date().getFullYear() : '2024'} Coinlist. All rights reserved.
       </footer>
     </div>
   );

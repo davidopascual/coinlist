@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
 
 // USDC token address for Base Sepolia (checksummed)
-const USDC_ADDRESS = '0x6fBf2cb78C2Aa07c679c4A9af84E03EbfB69161e';
+const USDC_ADDRESS = process.env.NEXT_PUBLIC_USDC_ADDRESS!;
 const ETH_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 export function CreateListingForm({ onCreated }: { onCreated?: () => void }) {

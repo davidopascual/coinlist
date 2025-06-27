@@ -1,11 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-/**
- * @title EscrowMarketplace
- * @dev Basic escrow contract for a decentralized marketplace supporting ETH and ERC20 (e.g., USDC) payments.
- */
-
 interface IERC20 {
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
     function transfer(address to, uint256 amount) external returns (bool);
@@ -35,6 +30,14 @@ contract EscrowMarketplace {
     constructor(address _feeRecipient) {
         require(_feeRecipient != address(0), "Invalid fee recipient");
         feeRecipient = _feeRecipient;
+    }
+
+    // Prevent accidental ETH transfers
+    receive() external payable {
+        revert("Send ETH via purchase()");
+    }
+    fallback() external payable {
+        revert("Send ETH via purchase()");
     }
 
     function purchase(address seller, uint256 amount, address tokenAddress) external payable returns (uint256) {

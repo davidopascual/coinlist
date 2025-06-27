@@ -6,6 +6,9 @@ export function ETHBalance() {
   const { address, isConnected, chain } = useAccount();
   const [balance, setBalance] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     async function fetchBalance() {
@@ -28,6 +31,7 @@ export function ETHBalance() {
     fetchBalance();
   }, [address, isConnected, chain]);
 
+  if (!mounted) return null;
   if (!isConnected) return null;
   if (error) return <div className="text-xs text-red-500">{error}</div>;
   if (balance === null) return <div className="text-xs text-gray-400">ETH: ...</div>;
